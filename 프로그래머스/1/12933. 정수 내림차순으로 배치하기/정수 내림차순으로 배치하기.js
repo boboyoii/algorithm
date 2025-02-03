@@ -1,5 +1,10 @@
 function solution(n) {
-    var numbers = n.toString().split('');
-    var answer = numbers.sort((a,b) => b-a).join('');
-    return Number(answer);
+    var nums = [];
+    do{
+        nums.push(n%10);
+        n = Math.floor(n/10);
+    }while(n>0)
+    
+    nums.sort((a,b) => b-a);
+    return +nums.join('');
 }
