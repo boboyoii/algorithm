@@ -1,6 +1,9 @@
 function solution(x) {
-    var nums = (x+'').split('');
-    var digitSum = nums.reduce((acc,num) => acc+Number(num),0);
-    if(x % digitSum === 0) return true;
-    return false;
+    var num = x;
+    var sum = 0;
+    do{
+        sum += x%10;
+        x = Math.floor(x/10);
+    }while(x > 0)
+    return !(num%sum)
 }
