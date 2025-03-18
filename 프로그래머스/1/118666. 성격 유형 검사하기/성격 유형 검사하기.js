@@ -1,24 +1,15 @@
 function solution(survey, choices) {
-    let score = {'R':0, 'T':0, 'C':0, 'F':0, 'J':0, 'M':0, 'A':0, 'N':0};
-    let answer = '';
+    var MBTI = {};
+    const types = ['RT', 'CF', 'JM', 'AN'];
     
-    choices.forEach((val,idx) => {
-        const [a,b] = survey[idx].split('');
-        if(val < 4) score[a] += (4-val);
-        else if (val > 4) score[b] += (val-4);
+    types.forEach((type) => 
+        type.split('').forEach((char) => MBTI[char] = 0));
+    
+    choices.forEach((choice, index) => {
+        const [disagree, agree] = survey[index];
+        MBTI[choice > 4 ? agree : disagree] += Math.abs(4-choice);
     });
     
-    let type;
-    let i = 0;
-    for(let key in score){
-        if(i % 2 === 0) type = key;
-        
-        else{
-            if(score[key] > score[type]) type = key;
-            answer += type;
-        }
-        
-        i++;
-    }
-    return answer;
+    return types.map(([a,b]) => MBTI[b] > MBTI[a] ? b : a).join('');
+    
 }
