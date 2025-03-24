@@ -8,7 +8,7 @@ function solution(ingredient) {
     ingredient.forEach((item) => {
         stack.push(item);
         if(equals(stack.slice(-4), BURGER)){
-            stack.splice(stack.length-4,4);
+            stack.splice(-4);
             count += 1;
         }
     })
