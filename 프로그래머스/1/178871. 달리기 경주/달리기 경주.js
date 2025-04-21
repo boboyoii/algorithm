@@ -1,24 +1,17 @@
 function solution(players, callings) {
-    const nameToRank = {};
-    const rankToName = {};
-   
-    players.forEach((name,idx) => {
-        nameToRank[name] = idx+1;
-        rankToName[idx+1] = name;
-        
-    });
+    const ranks = {};
+    players.forEach((name,idx) => ranks[name] = idx);
     
-    callings.forEach((name) => {
-        const currentRank = nameToRank[name];
-        const passed = rankToName[currentRank-1];
+    for(const call of callings){
+        const rank = ranks[call];
+        const passed = players[rank-1];
         
-        nameToRank[name] = currentRank-1;
-        nameToRank[passed] = currentRank;
+        players[rank-1] = call;
+        players[rank] = passed;
         
-        rankToName[currentRank] = rankToName[currentRank-1];
-        rankToName[currentRank-1] = name;
-        
-    });
+        ranks[call] = rank-1;
+        ranks[passed] = rank;
+    }
     
-    return Object.values(rankToName);
+    return players;
 }
