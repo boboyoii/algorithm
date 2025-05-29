@@ -6,20 +6,16 @@ function solution(input) {
     if (str1.length !== str2.length) return result.push('Impossible');
     const charCount = {};
     [...str1].forEach((char) => {
-      if (!(char in charCount)) charCount[char] = 1;
-      else charCount[char]++;
+      if (!(char in charCount)) return (charCount[char] = 1);
+      charCount[char]++;
     });
 
-    let isPossible = true;
-    for (const char of str2) {
-      if (!charCount[char] || charCount[char] === 0) {
-        isPossible = false;
-        break;
-      }
-      charCount[char]--;
+    for (let i = 0; i < str2.length; i++) {
+      if (!(str2[i] in charCount)) return result.push('Impossible');
+      if (charCount[str2[i]] === 0) return result.push('Impossible');
+      charCount[str2[i]]--;
     }
-
-    result.push(isPossible ? 'Possible' : 'Impossible');
+    result.push('Possible');
   });
 
   return result.join('\n');
