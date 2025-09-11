@@ -5,20 +5,21 @@ const input = require('fs')
   .split('\n');
 
 const [N, M] = input[0].split(' ').map(Number);
-let arr = Array.from({ length: M }, () => 0);
+const arr = [];
 let result = '';
 
-function solution(k) {
-  if (k === M) {
+function solution(arr) {
+  if (arr.length === M) {
     result += arr.join(' ') + '\n';
     return;
   }
 
   for (let i = 1; i <= N; i++) {
-    arr[k] = i;
-    solution(k + 1);
+    arr.push(i);
+    solution(arr);
+    arr.pop();
   }
 }
 
-solution(0);
+solution(arr);
 console.log(result);
