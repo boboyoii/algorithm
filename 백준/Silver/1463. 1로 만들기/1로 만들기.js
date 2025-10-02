@@ -1,15 +1,18 @@
-const input = require('fs')
-  .readFileSync(process.platform === 'linux' ? '/dev/stdin' : './input.txt')
+function solution(N) {
+  let D = Array.from({ length: N + 1 }, (x) => 0);
+
+  for (let i = 2; i <= N; i++) {
+    D[i] = D[i - 1] + 1;
+    if (i % 2 === 0) D[i] = Math.min(D[i], D[i / 2] + 1);
+    if (i % 3 === 0) D[i] = Math.min(D[i], D[i / 3] + 1);
+  }
+
+  return D[N];
+}
+
+const input = +require("fs")
+  .readFileSync(process.platform === "linux" ? "/dev/stdin" : "./input.txt")
   .toString()
   .trim();
 
-const num = +input;
-var dp = Array.from({ length: 1000001 }, () => 0);
-
-for (let i = 2; i < dp.length; i++) {
-  dp[i] = dp[i - 1] + 1;
-  if (i % 2 === 0) dp[i] = Math.min(dp[i], dp[i / 2] + 1);
-  if (i % 3 === 0) dp[i] = Math.min(dp[i], dp[i / 3] + 1);
-}
-
-console.log(dp[num]);
+console.log(solution(input));
