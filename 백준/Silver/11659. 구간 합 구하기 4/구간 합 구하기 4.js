@@ -5,15 +5,17 @@ function solution(input) {
 
   const result = [];
 
-  const D = Array.from({ length: N }, (v, i) => nums[i]);
+  const D = Array.from({ length: N + 1 }, (v, i) => {
+    if (i === 0) return 0;
+    return nums[i - 1];
+  });
 
-  for (let i = 1; i < N; i++) D[i] += D[i - 1];
+  for (let i = 1; i <= N; i++) D[i] += D[i - 1];
 
   for (const range of ranges) {
-    const i = range[0] - 1;
-    const j = range[1] - 1;
-    if (i === 0) result.push(D[j]);
-    else result.push(D[j] - D[i - 1]);
+    const i = range[0];
+    const j = range[1];
+    result.push(D[j] - D[i - 1]);
   }
 
   return result.join("\n");
