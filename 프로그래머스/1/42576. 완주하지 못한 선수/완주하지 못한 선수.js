@@ -1,17 +1,16 @@
 function solution(participant, completion) {
-    participant.sort();
-    completion.sort();
+    const countMap = {};
     
-    let nonCompletionIndex = -1;
+    completion.forEach(name => {
+        countMap[name] = (countMap[name] || 0) + 1;
+    });
     
-    for(let i=0; i<completion.length; i++){
-        if(participant[i] === completion[i]) continue;
-        nonCompletionIndex = i;
-        break;
-    }
+    const nonCompletion = participant.find(name => {
+        if(!countMap[name])
+            return true;
+        countMap[name] -= 1;
+        return false;
+    });
     
-    if(nonCompletionIndex === -1) 
-        nonCompletionIndex = participant.length - 1;
-    
-    return participant[nonCompletionIndex];
+    return nonCompletion;
 }
