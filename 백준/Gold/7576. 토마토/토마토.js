@@ -1,56 +1,9 @@
-function solution(input) {
-  const [M, N] = input[0].split(' ').map(Number);
-  const tomatos = input.slice(1).map((v) => v.split(' ').map(Number));
-  const visit = Array.from({ length: N }, () =>
-    Array.from({ length: M }, () => false)
-  );
-  const queue = [];
-
-  for (let i = 0; i < N; i++)
-    for (let j = 0; j < M; j++)
-      if (tomatos[i][j] === 1) {
-        queue.push({ pos: [i, j], date: 1 });
-        visit[i][j] = true;
-      }
-
-  let idx = 0;
-  while (queue.length > idx) {
-    const tomato = queue[idx];
-    idx += 1;
-    const [x, y] = tomato.pos;
-
-    if (tomatos[x][y] === 0 || tomatos[x][y] > tomato.date)
-      tomatos[x][y] = tomato.date;
-    if (x - 1 > -1 && tomatos[x - 1][y] !== -1 && !visit[x - 1][y]) {
-      queue.push({ pos: [x - 1, y], date: tomato.date + 1 });
-      visit[x - 1][y] = true;
-    }
-
-    if (x + 1 < N && tomatos[x + 1][y] !== -1 && !visit[x + 1][y]) {
-      queue.push({ pos: [x + 1, y], date: tomato.date + 1 });
-      visit[x + 1][y] = true;
-    }
-
-    if (y - 1 > -1 && tomatos[x][y - 1] !== -1 && !visit[x][y - 1]) {
-      queue.push({ pos: [x, y - 1], date: tomato.date + 1 });
-      visit[x][y - 1] = true;
-    }
-    if (y + 1 < M && tomatos[x][y + 1] !== -1 && !visit[x][y + 1]) {
-      queue.push({ pos: [x, y + 1], date: tomato.date + 1 });
-      visit[x][y + 1] = true;
-    }
-  }
-
-  let maxDate = 0;
-
-  for (let i = 0; i < N; i++)
-    for (let j = 0; j < M; j++) {
-      if (tomatos[i][j] === 0) return -1;
-      if (tomatos[i][j] > maxDate) maxDate = tomatos[i][j];
-    }
-
-  return maxDate - 1;
-}
+const dir = [
+  [-1, 0],
+  [1, 0],
+  [0, 1],
+  [0, -1],
+];
 
 const input = require('fs')
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : './input.txt')
@@ -58,4 +11,37 @@ const input = require('fs')
   .trim()
   .split('\n');
 
-console.log(solution(input));
+const [M, N] = input[0].split(' ').map(Number);
+const tomatoes = input.slice(1).map((line) => line.split(' ').map(Number));
+
+function solution(M, N, tomatoes) {
+  const visit = Array.from({ length: N }, () => Array(M).fill(-1));
+  const queue = [];
+  let minDays = 1;
+
+  for (let i = 0; i < N; i++) {
+    for (let j = 0; j < M; j++) if (tomatoes[i][j] === 1) queue.push([i, j]);
+  }
+
+  let idx = 0;
+  while (queue.length > idx) {
+    const [x, y] = queue[idx++];
+    const currentDay = tomatoes[x][y];
+
+    for (let i = 0; i < 4; i++) {
+      const nx = x + dir[i][0];
+      const ny = y + dir[i][1];
+      if (nx < 0 || nx >= N || ny < 0 || ny >= M) continue;
+      if (tomatoes[nx][ny] !== 0 || tomatoes[nx][ny] === -1) continue;
+      queue.push([nx, ny]);
+      tomatoes[nx][ny] = currentDay + 1;
+      if (minDays < tomatoes[nx][ny]) minDays = tomatoes[nx][ny];
+    }
+  }
+
+  for (let i = 0; i < N; i++) if (tomatoes[i].includes(0)) return -1;
+
+  return minDays - 1;
+}
+
+console.log(solution(M, N, tomatoes));
