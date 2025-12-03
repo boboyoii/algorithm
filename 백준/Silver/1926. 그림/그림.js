@@ -1,42 +1,56 @@
-function solution(input) {
-  const painitng = input.slice(1).map((v) => v.split(' '));
-  const visit = Array.from({ length: painitng.length }, () =>
-    Array.from({ length: painitng[0].length }, () => false)
-  );
-  const queue = [];
-  const extents = [];
-
-  for (let i = 0; i < painitng.length; i++) {
-    for (let j = 0; j < painitng[0].length; j++) {
-      queue.push([i, j]);
-      let extent = 0;
-      while (queue.length !== 0) {
-        const [x_copy, y_copy] = queue.shift();
-        if (visit[x_copy][y_copy]) continue;
-        visit[x_copy][y_copy] = true;
-        if (painitng[x_copy][y_copy] === '0') continue;
-        extent += 1;
-
-        if (x_copy - 1 > -1 && !visit[x_copy - 1][y_copy])
-          queue.push([x_copy - 1, y_copy]);
-        if (x_copy + 1 < painitng.length && !visit[x_copy + 1][y_copy])
-          queue.push([x_copy + 1, y_copy]);
-        if (y_copy - 1 > -1 && !visit[x_copy][y_copy - 1])
-          queue.push([x_copy, y_copy - 1]);
-        if (y_copy + 1 < painitng[0].length && !visit[x_copy][y_copy + 1])
-          queue.push([x_copy, y_copy + 1]);
-      }
-      if (extent !== 0) extents.push(extent);
-    }
-  }
-  console.log(extents.length);
-  console.log(extents.length === 0 ? 0 : Math.max(...extents));
-}
-
 const input = require('fs')
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : './input.txt')
   .toString()
   .trim()
   .split('\n');
 
-solution(input);
+const [m, n] = input[0].split(' ').map(Number);
+const paperMap = input.slice(1).map((line) => line.split(' '));
+
+function solution(m, n, paperMap) {
+  const visit = Array.from({ length: m }, () => Array(n).fill(false));
+  const queue = [];
+  const areaList = [];
+
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (!visit[i][j]) {
+        queue.push([i, j]);
+        visit[i][j] = true;
+      }
+      let areas = 0;
+
+      while (queue.length !== 0) {
+        const [x, y] = queue.shift();
+        if (paperMap[x][y] == '0') continue;
+        areas += 1;
+
+        if (x - 1 > -1 && !visit[x - 1][y]) {
+          queue.push([x - 1, y]);
+          visit[x - 1][y] = true;
+        }
+        if (x + 1 < m && !visit[x + 1][y]) {
+          queue.push([x + 1, y]);
+          visit[x + 1][y] = true;
+        }
+        if (y - 1 > -1 && !visit[x][y - 1]) {
+          queue.push([x, y - 1]);
+          visit[x][y - 1] = true;
+        }
+        if (y + 1 < n && !visit[x][y + 1]) {
+          queue.push([x, y + 1]);
+          visit[x][y + 1] = true;
+        }
+      }
+
+      if (areas !== 0) areaList.push(areas);
+    }
+  }
+
+  if (areaList.length === 0) return [0, 0];
+  return [areaList.length, Math.max(...areaList)];
+}
+
+const [count, maxArea] = solution(m, n, paperMap);
+console.log(count);
+console.log(maxArea);
