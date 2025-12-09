@@ -1,18 +1,16 @@
-function solution(input) {
-  const [A, B, C] = input.split(' ').map(BigInt);
-  return mul(A, B, C).toString();
-}
-
-function mul(a, b, mod) {
-  if (b === 1n) return a % mod;
-  const half = mul(a, b / 2n, mod);
-  const result = (half * half) % mod;
-  return b % 2n === 0n ? result : (result * a) % mod;
-}
-
 const input = require('fs')
   .readFileSync(process.platform === 'linux' ? '/dev/stdin' : './input.txt')
   .toString()
   .trim();
 
-console.log(solution(input));
+const [A, B, C] = input.split(' ').map(BigInt);
+
+function solution(B) {
+  if (B === 1n) return A % C;
+  const val = solution(B / 2n);
+  if (B % 2n === 0n) return (val * val) % C;
+  else return (val * val * A) % C;
+}
+
+const result = solution(B);
+console.log(String(result));
