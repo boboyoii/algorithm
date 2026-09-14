@@ -1,16 +1,14 @@
 function solution(participant, completion) {
-    const countMap = {};
+    const nameCounts = {};
+    participant.forEach((name) => {
+        if(!(name in nameCounts)) return nameCounts[name] = 1;
+        return nameCounts[name] += 1;
+    })
+        
+    completion.forEach((name) => {
+        nameCounts[name] -= 1;
+    })
+    const answer = Object.keys(nameCounts).filter(key => nameCounts[key] === 1);
     
-    completion.forEach(name => {
-        countMap[name] = (countMap[name] || 0) + 1;
-    });
-    
-    const nonCompletion = participant.find(name => {
-        if(!countMap[name])
-            return true;
-        countMap[name] -= 1;
-        return false;
-    });
-    
-    return nonCompletion;
+    return answer[0];
 }
