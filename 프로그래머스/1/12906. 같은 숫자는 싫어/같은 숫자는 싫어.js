@@ -1,11 +1,11 @@
 function solution(arr)
 {
-    var answer = [];
-    
-    for(const num of arr){
-        if(answer[answer.length-1] === num) continue;
-        answer.push(num);
-    }
+    const answer = [];
+    arr.forEach((v) => {
+        if(answer.length === 0) return answer.push(v);
+        if(answer[answer.length-1] === v) return;
+        answer.push(v);
+    })
     
     return answer;
 }
